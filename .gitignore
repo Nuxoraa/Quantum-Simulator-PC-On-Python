@@ -1,174 +1,324 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
+import numpy as np
+import matplotlib.pyplot as plt
+from math import sqrt, pi
+import tkinter as tk
+from tkinter import ttk
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-# C extensions
-*.so
+class QuantumSimulator:
+    def __init__(self, num_qubits=2):
+        self.num_qubits = num_qubits
+        self.qubits = [np.array([1.0, 0.0]) for _ in range(num_qubits)]
+        self.history = []
+        
+        # Базовые гейты
+        self.gates = {
+            'I': np.eye(2),
+            'X': np.array([[0, 1], [1, 0]]),
+            'Y': np.array([[0, -1j], [1j, 0]]),
+            'Z': np.array([[1, 0], [0, -1]]),
+            'H': np.array([[1/sqrt(2), 1/sqrt(2)], [1/sqrt(2), -1/sqrt(2)]]),
+            'S': np.array([[1, 0], [0, 1j]]),
+            'T': np.array([[1, 0], [0, np.exp(1j*pi/4)]]),
+            'CNOT': self._cnot_matrix()
+        }
+    
+    def _cnot_matrix(self):
+        """Матрица CNOT для 2 кубитов"""
+        return np.array([
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 0, 1],
+            [0, 0, 1, 0]
+        ])
+    
+    def apply_gate(self, gate_name, target, control=None):
+        """Применяет гейт к кубиту(ам)"""
+        if gate_name == 'CNOT' and control is not None:
+            # Специальная обработка CNOT
+            if target == control:
+                raise ValueError("Control and target cannot be the same")
+            
+            # Создаем состояние 2 кубитов
+            state = np.kron(self.qubits[control], self.qubits[target])
+            
+            # Применяем CNOT
+            new_state = np.dot(self.gates['CNOT'], state)
+            
+            # Обновляем состояния кубитов
+            self.qubits[control] = np.array([new_state[0] + new_state[1], new_state[2] + new_state[3]])
+            self.qubits[target] = np.array([new_state[0] + new_state[2], new_state[1] + new_state[3]])
+        else:
+            # Одиночные гейты
+            self.qubits[target] = np.dot(self.gates[gate_name], self.qubits[target])
+        
+        self.history.append((gate_name, target, control))
+    
+    def measure(self, qubit_idx):
+        """Измеряет кубит и возвращает 0 или 1"""
+        prob_0 = abs(self.qubits[qubit_idx][0])**2
+        result = 0 if np.random.random() < prob_0 else 1
+        
+        # Коллапс состояния
+        if result == 0:
+            self.qubits[qubit_idx] = np.array([1.0, 0.0])
+        else:
+            self.qubits[qubit_idx] = np.array([0.0, 1.0])
+            
+        return result
+    
+    def grover_algorithm(self, target_state):
+        """Алгоритм Гровера для поиска target_state"""
+        n = self.num_qubits
+        
+        # Инициализация всех кубитов в суперпозицию
+        for i in range(n):
+            self.apply_gate('H', i)
+        
+        # Количество итераций (оптимальное для одного решения)
+        iterations = int((pi/4) * sqrt(2**n))
+        
+        for _ in range(iterations):
+            # Оракул - меняет знак у целевого состояния
+            for i in range(n):
+                if target_state[i] == '1':
+                    self.apply_gate('X', i)
+            
+            self.apply_gate('Z', 0)  # Применяем Z к первому кубиту
+            
+            for i in range(n):
+                if target_state[i] == '1':
+                    self.apply_gate('X', i)
+            
+            # Диффузионный оператор
+            for i in range(n):
+                self.apply_gate('H', i)
+                self.apply_gate('X', i)
+            
+            self.apply_gate('H', n-1)
+            self.apply_gate('CNOT', n-2, n-1)
+            self.apply_gate('H', n-1)
+            
+            for i in range(n):
+                self.apply_gate('X', i)
+                self.apply_gate('H', i)
+    
+    def plot_probabilities(self):
+        """Визуализация вероятностей состояний"""
+        fig = plt.figure(figsize=(10, 5))
+        
+        # Вероятности базовых состояний
+        states = [format(i, f'0{self.num_qubits}b') for i in range(2**self.num_qubits)]
+        probs = []
+        
+        for i in range(2**self.num_qubits):
+            binary = format(i, f'0{self.num_qubits}b')
+            prob = 1.0
+            for q in range(self.num_qubits):
+                if binary[q] == '0':
+                    prob *= abs(self.qubits[q][0])**2
+                else:
+                    prob *= abs(self.qubits[q][1])**2
+            probs.append(prob)
+        
+        plt.bar(states, probs)
+        plt.title('Вероятности состояний')
+        plt.xlabel('Состояние')
+        plt.ylabel('Вероятность')
+        plt.ylim(0, 1)
+        
+        return fig
 
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
+class QuantumGUI:
+    def __init__(self, master):
+        self.master = master
+        master.title("Nuxora's Quantum Simulator")
+        
+        self.simulator = QuantumSimulator(2)
+        self.create_widgets()
+        self.update_display()
+    
+    def create_widgets(self):
+        """Создает элементы интерфейса"""
+        # Панель управления
+        control_frame = ttk.Frame(self.master, padding="10")
+        control_frame.grid(row=0, column=0, sticky="nsew")
+        
+        # Выбор кубитов
+        ttk.Label(control_frame, text="Количество кубитов:").grid(row=0, column=0)
+        self.qubit_count = ttk.Combobox(control_frame, values=[1, 2, 3, 4, 5], width=5)
+        self.qubit_count.current(1)
+        self.qubit_count.grid(row=0, column=1)
+        self.qubit_count.bind("<<ComboboxSelected>>", self.change_qubit_count)
+        
+        # Выбор гейта
+        ttk.Label(control_frame, text="Гейт:").grid(row=1, column=0)
+        self.gate_select = ttk.Combobox(control_frame, 
+                                      values=['I', 'X', 'Y', 'Z', 'H', 'S', 'T', 'CNOT'], 
+                                      width=5)
+        self.gate_select.current(0)
+        self.gate_select.grid(row=1, column=1)
+        
+        # Целевой кубит
+        ttk.Label(control_frame, text="Целевой кубит:").grid(row=2, column=0)
+        self.target_qubit = ttk.Combobox(control_frame, values=[0, 1], width=5)
+        self.target_qubit.current(0)
+        self.target_qubit.grid(row=2, column=1)
+        
+        # Контрольный кубит (для CNOT)
+        ttk.Label(control_frame, text="Контрольный кубит:").grid(row=3, column=0)
+        self.control_qubit = ttk.Combobox(control_frame, values=[0, 1], width=5)
+        self.control_qubit.current(1)
+        self.control_qubit.grid(row=3, column=1)
+        
+        # Кнопка применения гейта
+        self.apply_gate_btn = ttk.Button(control_frame, text="Применить гейт", 
+                                       command=self.apply_gate)
+        self.apply_gate_btn.grid(row=4, column=0, columnspan=2, pady=5)
+        
+        # Кнопка измерения
+        self.measure_btn = ttk.Button(control_frame, text="Измерить", 
+                                     command=self.measure_qubit)
+        self.measure_btn.grid(row=5, column=0, columnspan=2, pady=5)
+        
+        # Кнопка сброса
+        self.reset_btn = ttk.Button(control_frame, text="Сбросить", 
+                                   command=self.reset_simulator)
+        self.reset_btn.grid(row=6, column=0, columnspan=2, pady=5)
+        
+        # Алгоритм Гровера
+        ttk.Label(control_frame, text="Алгоритм Гровера:").grid(row=7, column=0)
+        self.grover_target = ttk.Entry(control_frame, width=5)
+        self.grover_target.grid(row=7, column=1)
+        self.grover_target.insert(0, "11")
+        
+        self.grover_btn = ttk.Button(control_frame, text="Запустить Гровера", 
+                                    command=self.run_grover)
+        self.grover_btn.grid(row=8, column=0, columnspan=2, pady=5)
+        
+        # Отображение состояния
+        self.state_frame = ttk.Frame(self.master, padding="10")
+        self.state_frame.grid(row=0, column=1, sticky="nsew")
+        
+        self.state_label = ttk.Label(self.state_frame, text="Состояние кубитов:")
+        self.state_label.pack()
+        
+        self.state_text = tk.Text(self.state_frame, height=10, width=40)
+        self.state_text.pack()
+        
+        # График вероятностей
+        self.figure = plt.figure(figsize=(6, 4))
+        self.canvas = FigureCanvasTkAgg(self.figure, master=self.master)
+        self.canvas.get_tk_widget().grid(row=1, column=0, columnspan=2, pady=10)
+    
+    def change_qubit_count(self, event=None):
+        """Изменяет количество кубитов в симуляторе"""
+        new_count = int(self.qubit_count.get())
+        self.simulator = QuantumSimulator(new_count)
+        
+        # Обновляем выбор кубитов
+        qubit_values = list(range(new_count))
+        self.target_qubit['values'] = qubit_values
+        self.control_qubit['values'] = qubit_values
+        
+        if new_count == 1:
+            self.target_qubit.current(0)
+            self.control_qubit.current(0)
+        else:
+            self.target_qubit.current(0)
+            self.control_qubit.current(1)
+        
+        self.update_display()
+    
+    def apply_gate(self):
+        """Применяет выбранный гейт"""
+        gate_name = self.gate_select.get()
+        target = int(self.target_qubit.get())
+        
+        if gate_name == 'CNOT':
+            control = int(self.control_qubit.get())
+            if control == target:
+                self.show_error("Control и target не могут быть одинаковыми")
+                return
+            self.simulator.apply_gate(gate_name, target, control)
+        else:
+            self.simulator.apply_gate(gate_name, target)
+        
+        self.update_display()
+    
+    def measure_qubit(self):
+        """Измеряет выбранный кубит"""
+        target = int(self.target_qubit.get())
+        result = self.simulator.measure(target)
+        self.show_info(f"Кубит {target} измерен как: {result}")
+        self.update_display()
+    
+    def reset_simulator(self):
+        """Сбрасывает симулятор"""
+        self.simulator = QuantumSimulator(self.simulator.num_qubits)
+        self.update_display()
+        self.show_info("Симулятор сброшен")
+    
+    def run_grover(self):
+        """Запускает алгоритм Гровера"""
+        target = self.grover_target.get()
+        
+        if len(target) != self.simulator.num_qubits or not all(c in '01' for c in target):
+            self.show_error("Целевое состояние должно быть бинарной строкой длины равной количеству кубитов")
+            return
+        
+        self.reset_simulator()
+        self.simulator.grover_algorithm(target)
+        self.update_display()
+        self.show_info(f"Алгоритм Гровера выполнен для состояния |{target}⟩")
+    
+    def update_display(self):
+        """Обновляет отображение состояния"""
+        self.state_text.delete(1.0, tk.END)
+        
+        for i, qubit in enumerate(self.simulator.qubits):
+            prob_0 = abs(qubit[0])**2
+            prob_1 = abs(qubit[1])**2
+            self.state_text.insert(tk.END, 
+                                 f"Кубит {i}: {qubit}\n"
+                                 f"Вероятность |0⟩: {prob_0:.2f}\n"
+                                 f"Вероятность |1⟩: {prob_1:.2f}\n\n")
+        
+        # Обновляем график
+        self.figure.clf()
+        ax = self.figure.add_subplot(111)
+        
+        states = [format(i, f'0{self.simulator.num_qubits}b') for i in range(2**self.simulator.num_qubits)]
+        probs = []
+        
+        for i in range(2**self.simulator.num_qubits):
+            binary = format(i, f'0{self.simulator.num_qubits}b')
+            prob = 1.0
+            for q in range(self.simulator.num_qubits):
+                if binary[q] == '0':
+                    prob *= abs(self.simulator.qubits[q][0])**2
+                else:
+                    prob *= abs(self.simulator.qubits[q][1])**2
+            probs.append(prob)
+        
+        ax.bar(states, probs)
+        ax.set_title('Вероятности состояний')
+        ax.set_xlabel('Состояние')
+        ax.set_ylabel('Вероятность')
+        ax.set_ylim(0, 1)
+        
+        self.canvas.draw()
+    
+    def show_info(self, message):
+        """Показывает информационное сообщение"""
+        tk.messagebox.showinfo("Информация", message)
+    
+    def show_error(self, message):
+        """Показывает сообщение об ошибке"""
+        tk.messagebox.showerror("Ошибка", message)
 
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
-
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
-.hypothesis/
-.pytest_cache/
-cover/
-
-# Translations
-*.mo
-*.pot
-
-# Django stuff:
-*.log
-local_settings.py
-db.sqlite3
-db.sqlite3-journal
-
-# Flask stuff:
-instance/
-.webassets-cache
-
-# Scrapy stuff:
-.scrapy
-
-# Sphinx documentation
-docs/_build/
-
-# PyBuilder
-.pybuilder/
-target/
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# IPython
-profile_default/
-ipython_config.py
-
-# pyenv
-#   For a library or package, you might want to ignore these files since the code is
-#   intended to run in multiple environments; otherwise, check them in:
-# .python-version
-
-# pipenv
-#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
-#   However, in case of collaboration, if having platform-specific dependencies or dependencies
-#   having no cross-platform support, pipenv may install dependencies that don't work, or not
-#   install all needed dependencies.
-#Pipfile.lock
-
-# UV
-#   Similar to Pipfile.lock, it is generally recommended to include uv.lock in version control.
-#   This is especially recommended for binary packages to ensure reproducibility, and is more
-#   commonly ignored for libraries.
-#uv.lock
-
-# poetry
-#   Similar to Pipfile.lock, it is generally recommended to include poetry.lock in version control.
-#   This is especially recommended for binary packages to ensure reproducibility, and is more
-#   commonly ignored for libraries.
-#   https://python-poetry.org/docs/basic-usage/#commit-your-poetrylock-file-to-version-control
-#poetry.lock
-
-# pdm
-#   Similar to Pipfile.lock, it is generally recommended to include pdm.lock in version control.
-#pdm.lock
-#   pdm stores project-wide configurations in .pdm.toml, but it is recommended to not include it
-#   in version control.
-#   https://pdm.fming.dev/latest/usage/project/#working-with-version-control
-.pdm.toml
-.pdm-python
-.pdm-build/
-
-# PEP 582; used by e.g. github.com/David-OConnor/pyflow and github.com/pdm-project/pdm
-__pypackages__/
-
-# Celery stuff
-celerybeat-schedule
-celerybeat.pid
-
-# SageMath parsed files
-*.sage.py
-
-# Environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-
-# Spyder project settings
-.spyderproject
-.spyproject
-
-# Rope project settings
-.ropeproject
-
-# mkdocs documentation
-/site
-
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
-
-# Pyre type checker
-.pyre/
-
-# pytype static type analyzer
-.pytype/
-
-# Cython debug symbols
-cython_debug/
-
-# PyCharm
-#  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
-#  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
-#  and can be added to the global gitignore or merged into this file.  For a more nuclear
-#  option (not recommended) you can uncomment the following to ignore the entire idea folder.
-#.idea/
-
-# Ruff stuff:
-.ruff_cache/
-
-# PyPI configuration file
-.pypirc
+# Запуск приложения
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = QuantumGUI(root)
+    root.mainloop()
