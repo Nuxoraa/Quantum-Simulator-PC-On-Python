@@ -102,7 +102,7 @@ may become inoperative, for example, links, etc., so please,
 if you see this, then perhaps I will fix it soon, thank you for
 understanding, for me it is difficult since I work solo and I am only 
 14, thank you for understanding again :)
-
+update also the code may not work so I will update the project content at least once a month >o<
 
 RUS:
 (внимание возможно в процессе продвижения
@@ -111,3 +111,5 @@ RUS:
 и тд так что просьба если видите такое то возможно в скоре я это 
 исправлю спасибо за понимание для меня это тяжело так как я работаю 
 соло и мне всего 14 спасибо за понимание еще раз :)
+обновление так же код может быть не рабочим так что я буду как минимум раз в месяц обновлять контент проекта >o<
+
