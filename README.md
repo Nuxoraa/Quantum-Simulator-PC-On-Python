@@ -34,7 +34,7 @@ print(qs.measure(0))      # Measure qubit 0
 ```
 
 ### 📊 Visualization Example
-![Q-Sphere Visualization](docs/images/qsphere.png)
+![Q-Sphere Visualization]([docs/images/qsphere.png](https://github.com/Nuxoraa/Quantum-Simulator-Repository-Setup-English-/blob/main/qsphere.png))
 
 ## 🇷🇺 Русская Версия
 
@@ -64,7 +64,7 @@ print(qs.measure(0))      # Измеряем 0-кубит
 ```
 
 ### 📈 Пример Визуализации
-![Визуализация Q-Sphere](docs/images/qsphere.png)
+![Визуализация Q-Sphere]([docs/images/qsphere.png](https://github.com/Nuxoraa/Quantum-Simulator-Repository-Setup-English-/blob/main/qsphere.png))
 
 ## 👨‍💻 Development / Разработка
 
