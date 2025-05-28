@@ -18,7 +18,7 @@
 
 ### 💻 Installation
 ```bash
-git clone https://github.com/Nuxora/quantum-simulator.git
+git clone https://github.com/Nuxora/Quantum-Simulator-Repository-Setup-English-.git
 cd quantum-simulator
 pip install -r requirements.txt
 ```
@@ -48,7 +48,7 @@ print(qs.measure(0))      # Measure qubit 0
 
 ### ⚙️ Установка
 ```bash
-git clone https://github.com/Nuxora/quantum-simulator.git
+git clone https://github.com/Nuxora/Quantum-Simulator-Repository-Setup-English-.git
 cd quantum-simulator
 pip install -r requirements.txt
 ```
