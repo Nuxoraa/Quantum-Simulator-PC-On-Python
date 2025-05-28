@@ -87,3 +87,27 @@ We welcome contributions! Please follow these steps:
 ## 📜 License / Лицензия
 MIT License - see [LICENSE](LICENSE) file for details  
 Лицензия MIT - подробности в файле [LICENSE](LICENSE)
+
+
+
+
+
+
+
+
+ENG:
+(attention, perhaps in the process of promoting and
+updating the project, the components of the repository
+may become inoperative, for example, links, etc., so please, 
+if you see this, then perhaps I will fix it soon, thank you for
+understanding, for me it is difficult since I work solo and I am only 
+14, thank you for understanding again :)
+
+
+RUS:
+(внимание возможно в процессе продвижения
+и обновления проекта компоненты 
+репозитория могут стать не рабочими на пример ссылки 
+и тд так что просьба если видите такое то возможно в скоре я это 
+исправлю спасибо за понимание для меня это тяжело так как я работаю 
+соло и мне всего 14 спасибо за понимание еще раз :)
