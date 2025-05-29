@@ -5,7 +5,7 @@
 ![Quantum](https://img.shields.io/badge/Quantum-Simulator-purple)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 ![Lines of Code](https://img.shields.io/badge/Lines%20of%20Code-3185-brightgreen)
-
+![Pillow Version](https://img.shields.io/pypi/v/pillow)  
 </div>
 
 ### 🚀 Features
@@ -43,13 +43,7 @@ We welcome contributions! Please follow these steps:
 4. Push to the branch
 5. Create a Pull Request
 
-# Quantum-Simulator
 
-![Python Version](https://img.shields.io/badge/python-3.7%2B-blue)  
-![Pillow Version](https://img.shields.io/pypi/v/pillow)  
-![Build Status](https://img.shields.io/github/actions/workflow/status/username/repo/python-app.yml?branch=main)  
-
----
 
 ## library
 
