@@ -1,29 +1,15 @@
-## What is needed? ✅
-
-Before running the project, make sure you have all dependencies installed.
-
-### Dependencies:
-
-| Package                      | Installation command                         | Description               |
-|-----------------------------|---------------------------------------------|---------------------------|
-| `numpy`, `matplotlib`, `tkinter` | ```bash<br>pip install numpy matplotlib tkinter<br>``` | Основные библиотеки для чисел, графиков и интерфейса |
-| `pillow`                    | ```bash<br>pip install pillow<br>```         | Работа с изображениями     |
-
-### That’s all! You’re ready to start 🚀
-
----
-
-### Badges (шильдики)
+# Quantum-Simulator
 
 ![Python Version](https://img.shields.io/badge/python-3.7%2B-blue)  
-![PyPI](https://img.shields.io/pypi/v/pillow)  
+![Pillow Version](https://img.shields.io/pypi/v/pillow)  
 ![Build Status](https://img.shields.io/github/actions/workflow/status/username/repo/python-app.yml?branch=main)  
 
 ---
 
-*Replace `username` and `repo` в ссылках шильдиков на свои реальные данные.*
+## What is needed?
 
----
+Make sure you have these installed before running the project:
 
-Если хочешь, я могу сгенерировать полный шаблон README для твоего проекта с такой структурой и стилем, включая примеры кода и описания.  
-Дай знать!
+1. Basic packages:  
+```bash
+pip install numpy matplotlib tkinter
