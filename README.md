@@ -1,40 +1,49 @@
-# 🌌 Quantum Computing Simulator
-
-![Python](https://img.shields.io/badge/Made%20with-Python%203.8+-blue.svg)
+<div align="center">
+  <h1>🌌 Quantum Computing Simulator</h1>
+  
+ ![Python](https://img.shields.io/badge/Made%20with-Python%203.8+-blue.svg)
 ![Quantum](https://img.shields.io/badge/Quantum-Simulator-purple)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 ![Lines of Code](https://img.shields.io/badge/Lines%20of%20Code-3185-brightgreen)
 
----
+</div>
 
-## ℹ️ About the Project
+### 🚀 Features
+- Full-featured quantum computer simulator
+- Supports up to 10 qubits
+- Includes basic gates (X, Y, Z, H, S, T, CNOT)
+- Grover's and Shor's algorithms implementation
+- Interactive GUI with visualization
+- Educational purpose - great for learning QC basics
 
-This project was created by a 14-year-old developer named **Nuxora**, living in Florida, who has been programming for 4 years.  
-It’s a fan-made project — a browser-based **quantum computing simulator** with 3185 lines of code.
-
-🛠 This is purely a fun and experimental project.  
-If you're interested — take a look, leave feedback, and feel free to ask questions!  
-I'm always happy to answer and hear your thoughts.
-
-💡 If you have ideas for improvements — don’t hesitate to share them!  
-You’re also welcome to modify the project yourself and publish it on your own page, but please make sure to include a link to my GitHub profile as the original creator.  
-Respect the work, please.
-
----
-
-## 🚀 Features
-
-- Simulates quantum systems with up to **10 qubits**
-- Supports basic gates: `X`, `Y`, `Z`, `H`, `S`, `T`, `CNOT`
-- Implements **Grover’s** and **Shor’s** algorithms
-- Built-in **GUI with visualization**
-- Perfect for **educational purposes**
-
----
-
-## 📦 Installation
-
-```bash
+### 💻 Installation
+bash
 git clone https://github.com/Nuxora/Quantum-Simulator-Repository-Setup-English-.git
 cd quantum-simulator
 pip install -r requirements.txt
+
+
+### 🏃‍♂️ Quick Start
+python
+from src.simulator import QuantumSimulator
+
+qs = QuantumSimulator(2)  # Create 2-qubit system
+qs.apply_gate('H', 0)    # Apply Hadamard to qubit 0
+qs.cnot(0, 1)            # Entangle qubits
+print(qs.measure(0))      # Measure qubit 0
+
+
+## 👨‍💻 Development
+
+### 🇬🇧 Contributing
+We welcome contributions! Please follow these steps:
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## 📜 License 
+MIT License - see [LICENSE](LICENSE) file for details  
+
+
