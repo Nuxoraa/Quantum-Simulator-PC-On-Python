@@ -1,115 +1,40 @@
-<div align="center">
-  <h1>🌌 Quantum Computing Simulator</h1>
-  <h3>Квантовый симулятор на Python</h3>
-  
-  [![Python Version](https://img.shields.io/badge/python-3.8+-blue.svg)]()
-  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)]()
-</div>
+# 🌌 Quantum Computing Simulator
 
-## 🇬🇧 English Version
+![Python](https://img.shields.io/badge/Made%20with-Python%203.8+-blue.svg)
+![Quantum](https://img.shields.io/badge/Quantum-Simulator-purple)
+![License](https://img.shields.io/badge/License-MIT-yellow)
+![Lines of Code](https://img.shields.io/badge/Lines%20of%20Code-3185-brightgreen)
 
-### 🚀 Features
-- Full-featured quantum computer simulator
-- Supports up to 10 qubits
-- Includes basic gates (X, Y, Z, H, S, T, CNOT)
-- Grover's and Shor's algorithms implementation
-- Interactive GUI with visualization
-- Educational purpose - great for learning QC basics
+---
 
-### 💻 Installation
+## ℹ️ About the Project
+
+This project was created by a 14-year-old developer named **Nuxora**, living in Florida, who has been programming for 4 years.  
+It’s a fan-made project — a browser-based **quantum computing simulator** with 3185 lines of code.
+
+🛠 This is purely a fun and experimental project.  
+If you're interested — take a look, leave feedback, and feel free to ask questions!  
+I'm always happy to answer and hear your thoughts.
+
+💡 If you have ideas for improvements — don’t hesitate to share them!  
+You’re also welcome to modify the project yourself and publish it on your own page, but please make sure to include a link to my GitHub profile as the original creator.  
+Respect the work, please.
+
+---
+
+## 🚀 Features
+
+- Simulates quantum systems with up to **10 qubits**
+- Supports basic gates: `X`, `Y`, `Z`, `H`, `S`, `T`, `CNOT`
+- Implements **Grover’s** and **Shor’s** algorithms
+- Built-in **GUI with visualization**
+- Perfect for **educational purposes**
+
+---
+
+## 📦 Installation
+
 ```bash
 git clone https://github.com/Nuxora/Quantum-Simulator-Repository-Setup-English-.git
 cd quantum-simulator
 pip install -r requirements.txt
-```
-
-### 🏃‍♂️ Quick Start
-```python
-from src.simulator import QuantumSimulator
-
-qs = QuantumSimulator(2)  # Create 2-qubit system
-qs.apply_gate('H', 0)    # Apply Hadamard to qubit 0
-qs.cnot(0, 1)            # Entangle qubits
-print(qs.measure(0))      # Measure qubit 0
-```
-
-### 📊 Visualization Example
-![Q-Sphere Visualization](https://github.com/Nuxoraa/Quantum-Simulator-Repository-Setup-English-/blob/main/qsphere.png)
-
-## 🇷🇺 Русская Версия
-
-### 🌟 Возможности
-- Полнофункциональный симулятор квантового компьютера
-- Поддержка до 10 кубитов
-- Все базовые гейты (X, Y, Z, H, S, T, CNOT)
-- Реализация алгоритмов Гровера и Шора
-- Графический интерфейс с визуализацией
-- Отлично подходит для изучения основ КК
-
-### ⚙️ Установка
-```bash
-git clone https://github.com/Nuxora/Quantum-Simulator-Repository-Setup-English-.git
-cd quantum-simulator
-pip install -r requirements.txt
-```
-
-### 🏁 Быстрый Старт
-```python
-from src.simulator import QuantumSimulator
-
-qs = QuantumSimulator(2)  # Создаём систему из 2 кубитов
-qs.apply_gate('H', 0)     # Применяем Адамара к 0-кубиту
-qs.cnot(0, 1)            # Запутываем кубиты
-print(qs.measure(0))      # Измеряем 0-кубит
-```
-
-### 📈 Пример Визуализации
-![Визуализация Q-Sphere](https://github.com/Nuxoraa/Quantum-Simulator-Repository-Setup-English-/blob/main/qsphere.png)
-
-## 👨‍💻 Development / Разработка
-
-### 🇬🇧 Contributing
-We welcome contributions! Please follow these steps:
-1. Fork the repository
-2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
-
-### 🇷🇺 Участие в разработке
-Приветствуются pull requests! Алгоритм:
-1. Форкните репозиторий
-2. Создайте ветку для своей фичи
-3. Закоммитьте изменения
-4. Запушьте в ветку
-5. Создайте Pull Request
-
-## 📜 License / Лицензия
-MIT License - see [LICENSE](LICENSE) file for details  
-Лицензия MIT - подробности в файле [LICENSE](LICENSE)
-
-
-
-
-
-
-
-
-ENG:
-(attention, perhaps in the process of promoting and
-updating the project, the components of the repository
-may become inoperative, for example, links, etc., so please, 
-if you see this, then perhaps I will fix it soon, thank you for
-understanding, for me it is difficult since I work solo and I am only 
-14, thank you for understanding again :)
-update also the code may not work so I will update the project content at least once a month >o<
-
-RUS:
-(внимание возможно в процессе продвижения
-и обновления проекта компоненты 
-репозитория могут стать не рабочими на пример ссылки 
-и тд так что просьба если видите такое то возможно в скоре я это 
-исправлю спасибо за понимание для меня это тяжело так как я работаю 
-соло и мне всего 14 спасибо за понимание еще раз :)
-обновление так же код может быть не рабочим так что я буду как минимум раз в месяц обновлять контент проекта >o<
-
