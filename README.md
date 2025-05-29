@@ -43,5 +43,18 @@ We welcome contributions! Please follow these steps:
 4. Push to the branch
 5. Create a Pull Request
 
-## 📜 License 
-MIT License - see [LICENSE](LICENSE) file for details  
+# Quantum-Simulator
+
+![Python Version](https://img.shields.io/badge/python-3.7%2B-blue)  
+![Pillow Version](https://img.shields.io/pypi/v/pillow)  
+![Build Status](https://img.shields.io/github/actions/workflow/status/username/repo/python-app.yml?branch=main)  
+
+---
+
+## library
+
+Make sure you have these installed before running the project:
+
+1. Basic packages:  
+```bash
+pip install numpy matplotlib tkinter
