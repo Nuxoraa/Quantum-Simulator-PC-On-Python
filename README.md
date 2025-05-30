@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>🌌 Quantum Computing Simulator</h1>
+  <h1> ❄︎ Quantum Computing Simulator ❄︎ </h1>
 
   ![Python](https://img.shields.io/badge/Made%20with-Python%203.8+-blue.svg)
   ![Quantum](https://img.shields.io/badge/Quantum-Simulator-purple)
@@ -10,7 +10,7 @@
 
 ---
 
-## 🚀 Features
+## ☺︎ Features
 
 - Full-featured quantum computer simulator  
 - Supports up to 10 qubits  
@@ -21,23 +21,7 @@
 
 ---
 
-## 💻 Installation
-
+## ✈︎ required libraries
 ```bash
-# Clone the repository
-git clone https://github.com/Nuxoraa/Quantum-Simulator-PC-On-Python.git
-
-# Move into the project directory
-cd Quantum-Simulator-PC-On-Python
-
-# (Optional but recommended) Create a virtual environment
-python -m venv venv
-
-# Activate the virtual environment
-# On Windows:
-venv\Scripts\activate
-# On Linux/macOS:
-source venv/bin/activate
-
-# Install all required dependencies
-pip install -r requirements.txt
+pip install numpy matplotlib pillow
+```
