@@ -1,0 +1,135 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from math import sqrt, pi
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
+class QuantumSimulator:
+    def __init__(self, num_qubits=2):
+        self.num_qubits = num_qubits
+        self.qubits = [np.array([1.0, 0.0]) for _ in range(num_qubits)]
+        self.history = []
+
+        # Basic gates
+        self.gates = {
+            'I': np.eye(2),
+            'X': np.array([[0, 1], [1, 0]]),
+            'Y': np.array([[0, -1j], [1j, 0]]),
+            'Z': np.array([[1, 0], [0, -1]]),
+            'H': np.array([[1/sqrt(2), 1/sqrt(2)],
+                           [1/sqrt(2), -1/sqrt(2)]]),
+            'S': np.array([[1, 0], [0, 1j]]),
+            'T': np.array([[1, 0], [0, np.exp(1j*pi/4)]]),
+            'CNOT': self._cnot_matrix()
+        }
+
+    def _cnot_matrix(self):
+        """CNOT matrix for 2 qubits"""
+        return np.array([
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 0, 1],
+            [0, 0, 1, 0]
+        ])
+
+    def apply_gate(self, gate_name, target, control=None):
+        """Applies a gate to qubit(s)"""
+        if gate_name == 'CNOT' and control is not None:
+            if target == control:
+                raise ValueError("Control and target cannot be the same")
+
+            # Create 2-qubit state
+            state = np.kron(self.qubits[control], self.qubits[target])
+
+            # Apply CNOT
+            new_state = np.dot(self.gates['CNOT'], state)
+
+            # Update qubit states
+            self.qubits[control] = np.array([new_state[0] + new_state[1],
+                                             new_state[2] + new_state[3]])
+            self.qubits[target] = np.array([new_state[0] + new_state[2],
+                                            new_state[1] + new_state[3]])
+        else:
+            # Single-qubit gates
+            self.qubits[target] = np.dot(self.gates[gate_name],
+                                         self.qubits[target])
+
+        self.history.append((gate_name, target, control))
+
+    def measure(self, qubit_idx):
+        """Measures a qubit and returns 0 or 1"""
+        prob_0 = abs(self.qubits[qubit_idx][0])**2
+        result = 0 if np.random.random() < prob_0 else 1
+
+        # Collapse state
+        if result == 0:
+            self.qubits[qubit_idx] = np.array([1.0, 0.0])
+        else:
+            self.qubits[qubit_idx] = np.array([0.0, 1.0])
+
+        return result
+
+    def grover_algorithm(self, target_state):
+        """Grover's algorithm for searching target_state"""
+        n = self.num_qubits
+
+        # Initialize all qubits in superposition
+        for i in range(n):
+            self.apply_gate('H', i)
+
+        # Number of iterations (optimal for one solution)
+        iterations = int((pi/4) * sqrt(2**n))
+
+        for _ in range(iterations):
+            # Oracle - flips sign of target state
+            for i in range(n):
+                if target_state[i] == '1':
+                    self.apply_gate('X', i)
+
+            self.apply_gate('Z', 0)  # Apply Z to the first qubit
+
+            for i in range(n):
+                if target_state[i] == '1':
+                    self.apply_gate('X', i)
+
+            # Diffusion operator
+            for i in range(n):
+                self.apply_gate('H', i)
+                self.apply_gate('X', i)
+
+            self.apply_gate('H', n-1)
+            self.apply_gate('CNOT', n-2, n-1)
+            self.apply_gate('H', n-1)
+
+            for i in range(n):
+                self.apply_gate('X', i)
+                self.apply_gate('H', i)
+
+    def plot_probabilities(self):
+        """Visualizes state probabilities"""
+        fig = plt.figure(figsize=(10, 5))
+
+        # Probabilities of basis states
+        states = [format(i, f'0{self.num_qubits}b')
+                  for i in range(2**self.num_qubits)]
+        probs = []
+
+        for i in range(2**self.num_qubits):
+            binary = format(i, f'0{self.num_qubits}b')
+            prob = 1.0
+            for q in range(self.num_qubits):
+                if binary[q] == '0':
+                    prob *= abs(self.qubits[q][0])**2
+                else:
+                    prob *= abs(self.qubits[q][1])**2
+            probs.append(prob)
+
+        plt.bar(states, probs)
+        plt.title('State Probabilities')
+        plt.xlabel('State')
+        plt.ylabel('Probability')
+        plt.ylim(0, 1)
+
+        return fig
