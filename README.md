@@ -17,11 +17,11 @@
 - Educational purpose - great for learning QC basics
 
 ### 💻 Installation
-bash
-git clone https://github.com/Nuxora/Quantum-Simulator-Repository-Setup-English-.git
+```bash
+git clone https://github.com/Nuxora/Quantum-Simulator-PC-On-Python.git
 cd quantum-simulator
 pip install -r requirements.txt
-
+```
 
 ### 🏃‍♂️ Quick Start
 python
