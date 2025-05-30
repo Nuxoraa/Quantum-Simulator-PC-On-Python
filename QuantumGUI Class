@@ -1,0 +1,113 @@
+class QuantumGUI:
+    def __init__(self, master):
+        self.master = master
+        master.title("Nuxora's Quantum Simulator")
+
+        self.simulator = QuantumSimulator(2)
+        self.create_widgets()
+        self.update_display()
+
+    def create_widgets(self):
+        """Creates UI elements"""
+        # Control panel
+        control_frame = ttk.Frame(self.master, padding="10")
+        control_frame.grid(row=0, column=0, sticky="nsew")
+
+        # Qubit count selection
+        ttk.Label(control_frame, text="Number of Qubits:").grid(row=0, column=0)
+        self.qubit_count = ttk.Combobox(control_frame,
+                                        values=[1, 2, 3, 4, 5], width=5)
+        self.qubit_count.current(1)
+        self.qubit_count.grid(row=0, column=1)
+        self.qubit_count.bind("<<ComboboxSelected>>", self.change_qubit_count)
+
+        # Gate selection
+        ttk.Label(control_frame, text="Gate:").grid(row=1, column=0)
+        self.gate_select = ttk.Combobox(control_frame,
+                                        values=['I', 'X', 'Y', 'Z', 'H', 'S', 'T', 'CNOT'],
+                                        width=5)
+        self.gate_select.current(0)
+        self.gate_select.grid(row=1, column=1)
+
+        # Target qubit
+        ttk.Label(control_frame, text="Target Qubit:").grid(row=2, column=0)
+        self.target_qubit = ttk.Combobox(control_frame, values=[0, 1], width=5)
+        self.target_qubit.current(0)
+        self.target_qubit.grid(row=2, column=1)
+
+        # Control qubit (for CNOT)
+        ttk.Label(control_frame, text="Control Qubit:").grid(row=3, column=0)
+        self.control_qubit = ttk.Combobox(control_frame, values=[0, 1], width=5)
+        self.control_qubit.current(1)
+        self.control_qubit.grid(row=3, column=1)
+
+        # Apply gate button
+        self.apply_gate_btn = ttk.Button(control_frame, text="Apply Gate",
+                                         command=self.apply_gate)
+        self.apply_gate_btn.grid(row=4, column=0, columnspan=2, pady=5)
+
+        # Measure button
+        self.measure_btn = ttk.Button(control_frame, text="Measure",
+                                      command=self.measure_qubit)
+        self.measure_btn.grid(row=5, column=0, columnspan=2, pady=5)
+
+        # Reset button
+        self.reset_btn = ttk.Button(control_frame, text="Reset",
+                                    command=self.reset_simulator)
+        self.reset_btn.grid(row=6, column=0, columnspan=2, pady=5)
+
+        # Grover's algorithm
+        ttk.Label(control_frame, text="Grover's Algorithm:").grid(row=7, column=0)
+        self.grover_target = ttk.Entry(control_frame, width=5)
+        self.grover_target.grid(row=7, column=1)
+        self.grover_target.insert(0, "11")
+
+        self.grover_btn = ttk.Button(control_frame, text="Run Grover",
+                                     command=self.run_grover)
+        self.grover_btn.grid(row=8, column=0, columnspan=2, pady=5)
+
+        # Qubit state display
+        self.state_frame = ttk.Frame(self.master, padding="10")
+        self.state_frame.grid(row=0, column=1, sticky="nsew")
+
+        self.state_label = ttk.Label(self.state_frame, text="Qubit States:")
+        self.state_label.pack()
+
+        self.state_text = tk.Text(self.state_frame, height=10, width=40)
+        self.state_text.pack()
+
+        # Probability plot
+        self.figure = plt.figure(figsize=(6, 4))
+        self.canvas = FigureCanvasTkAgg(self.figure, master=self.master)
+        self.canvas.get_tk_widget().grid(row=1, column=0, columnspan=2, pady=10)
+
+    def change_qubit_count(self, event=None):
+        """Changes the number of qubits in the simulator"""
+        new_count = int(self.qubit_count.get())
+        self.simulator = QuantumSimulator(new_count)
+
+        # Update qubit selections
+        qubit_values = list(range(new_count))
+        self.target_qubit['values'] = qubit_values
+        self.control_qubit['values'] = qubit_values
+
+        if new_count == 1:
+            self.target_qubit.current(0)
+            self.control_qubit.current(0)
+        else:
+            self.target_qubit.current(0)
+            self.control_qubit.current(1)
+
+        self.update_display()
+
+    def apply_gate(self):
+        """Applies the selected gate"""
+        gate_name = self.gate_select.get()
+        target = int(self.target_qubit.get())
+
+        if gate_name == 'CNOT':
+            control = int(self.control_qubit.get())
+            if control == target:
+                self
+::contentReference[oaicite:0]{index=0}
+ 
